@@ -1,8 +1,8 @@
 import sys
 import os
 import streamlit as st
-from ocr.model import process_image  # Importing the new OCR function
-from search.search import fuzzy_search, boolean_search  # Import your search functions
+from ocr.model import process_image  # Importing the OCR function
+from search.search import fuzzy_search, boolean_search  # Import search functions
 
 # Add custom CSS for styling
 st.markdown(
@@ -57,34 +57,38 @@ if st.button("Process Image and Search"):
         # Perform OCR on the uploaded image
         extracted_text = process_image(uploaded_file)
 
-        # Display the extracted text
-        st.text_area("Extracted Text", value=extracted_text, height=300)
+        if isinstance(extracted_text, str):
+            # Display the extracted text
+            st.text_area("Extracted Text", value=extracted_text, height=300)
 
-        # Perform search if query is provided
-        if search_query:
-            search_result = ""
-            extracted_text_normalized = extracted_text.lower().strip()
-            search_query_normalized = search_query.lower().strip()
+            # Perform search if query is provided
+            if search_query:
+                search_result = ""
+                extracted_text_normalized = extracted_text.lower().strip()
+                search_query_normalized = search_query.lower().strip()
 
-            if search_type == "Exact":
-                if search_query_normalized in extracted_text_normalized:
-                    search_result = f"Exact match found: {search_query}"
-                else:
-                    search_result = "No exact match found."
-                    
-            elif search_type == "Fuzzy":
-                if fuzzy_search(search_query_normalized, extracted_text_normalized):
-                    search_result = f"Fuzzy match found: {search_query}"
-                else:
-                    search_result = "No fuzzy match found."
-                    
-            elif search_type == "Boolean":
-                if boolean_search(search_query_normalized, extracted_text_normalized):
-                    search_result = f"Boolean search match found: {search_query}"
-                else:
-                    search_result = "No Boolean match found."
-            
-            # Display the search result
-            st.write(search_result)
+                if search_type == "Exact":
+                    if search_query_normalized in extracted_text_normalized:
+                        search_result = f"Exact match found: {search_query}"
+                    else:
+                        search_result = "No exact match found."
+                
+                elif search_type == "Fuzzy":
+                    if fuzzy_search(search_query_normalized, extracted_text_normalized):
+                        search_result = f"Fuzzy match found: {search_query}"
+                    else:
+                        search_result = "No fuzzy match found."
+                
+                elif search_type == "Boolean":
+                    if boolean_search(search_query_normalized, extracted_text_normalized):
+                        search_result = f"Boolean search match found: {search_query}"
+                    else:
+                        search_result = "No Boolean match found."
+                
+                # Display the search result
+                st.write(search_result)
+        else:
+            st.warning(f"Error in OCR processing: {extracted_text}")
     else:
         st.warning("Please upload an image file to process.")
+
