@@ -9,7 +9,7 @@ This web application enables users to upload images containing printed or handwr
 - **Search Functionality**: Exact match, fuzzy search, and Boolean search capabilities for analyzing the extracted text.
 
 ## Prerequisites
-- Python 3.x installed.
+- Python 3.8.10 installed.
 - Virtual environment.
 - Libraries like Streamlit, Pytesseract, Pillow, Transformers, and others as listed in `requirements.txt`.
 
