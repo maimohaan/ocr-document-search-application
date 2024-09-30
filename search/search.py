@@ -3,9 +3,11 @@ from fuzzywuzzy import fuzz
 def fuzzy_search(query, text):
     """
     Perform a fuzzy search for the query in the extracted text.
+    
     Args:
         query (str): The search query.
         text (str): The extracted text.
+    
     Returns:
         bool: True if a fuzzy match is found, False otherwise.
     """
@@ -20,14 +22,18 @@ def fuzzy_search(query, text):
 def boolean_search(query, text):
     """
     Perform a Boolean search for the query in the extracted text.
+    
     Args:
         query (str): The search query.
         text (str): The extracted text.
+    
     Returns:
         bool: True if a match is found, False otherwise.
     """
     # Split the query into terms
     query_terms = query.split()
+    # Convert the text to lowercase once for better performance
+    text_lower = text.lower()
+    
     # Check if all terms are present in the text
-    return all(term.lower() in text.lower() for term in query_terms)
-
+    return all(term.lower() in text_lower for term in query_terms)
