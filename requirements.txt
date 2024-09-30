@@ -1,7 +1,7 @@
 # Core Libraries
 streamlit==1.38.0
 gradio==4.44.0
-numpy>=1.26.0
+numpy==1.24.0  # Updated for compatibility
 pandas==1.5.3
 opencv-python==4.10.0.84
 pytesseract==0.3.13
@@ -11,7 +11,7 @@ torch==2.4.1
 torchvision==0.19.1
 torchaudio==2.4.1
 transformers==4.45.1
-scipy==1.11.0  # Updated this line
+scipy==1.9.3  # Updated
 
 # Data Visualization
 altair==5.4.1
