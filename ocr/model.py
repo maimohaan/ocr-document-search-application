@@ -1,20 +1,16 @@
-import pytesseract
+import torch
+from transformers import AutoTokenizer, AutoModelForTokenClassification
 from PIL import Image
-import io
-import os
+import pytesseract
 
-# Set the TESSDATA_PREFIX environment variable to the directory containing language data files
-os.environ["TESSDATA_PREFIX"] = "/usr/share/tesseract-ocr/4.00/tessdata/"
-
-# You can check if the Tesseract executable is set up correctly.
-try:
-    pytesseract.pytesseract.tesseract_cmd = os.environ.get("TESSERACT_PATH", "tesseract")
-except Exception as e:
-    print(f"Error setting Tesseract path: {e}")
+# Load the model and tokenizer from Hugging Face
+model_name = "ColPali/Qwen2-VL"  # Update this to the correct model name
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForTokenClassification.from_pretrained(model_name)
 
 def process_image(uploaded_file):
     """
-    Process the uploaded image file and extract text using Pytesseract OCR.
+    Process the uploaded image file and extract text using Hugging Face OCR model.
     Args:
         uploaded_file (file-like object): The uploaded image file.
     Returns:
@@ -22,12 +18,13 @@ def process_image(uploaded_file):
     """
     try:
         # Convert the uploaded file to a PIL image
-        img = Image.open(io.BytesIO(uploaded_file.read()))  # Handling the uploaded file from Gradio
+        img = Image.open(uploaded_file)
         
-        # Perform OCR using Pytesseract
+        # Use Tesseract for initial OCR extraction
         extracted_text = pytesseract.image_to_string(img, lang='hin+eng')
         
-        # Return the extracted text
+        # Here, you can add logic to process the extracted text with the Hugging Face model if needed
+        
         return extracted_text
     except Exception as e:
         return f"Error in OCR processing: {str(e)}"
