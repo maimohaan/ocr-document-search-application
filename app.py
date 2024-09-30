@@ -97,9 +97,14 @@ if st.button("Process Image and Search"):
             extracted_text_normalized = extracted_text.strip()
             search_query_normalized = search_query.strip()
 
+            # Tokenizing the extracted text and search query
+            extracted_words = set(extracted_text_normalized.split())
+            query_words = set(search_query_normalized.split())
+
             # Perform the exact search
             if search_type == "Exact":
-                if search_query_normalized in extracted_text_normalized:
+                # Check if all words in the query are present in the extracted text
+                if query_words.issubset(extracted_words):
                     search_result = f"Exact match found: {search_query_normalized}"
                 else:
                     search_result = "No exact match found."
@@ -122,4 +127,3 @@ if st.button("Process Image and Search"):
             st.write(search_result)
     else:
         st.warning("Please upload an image file to process.")
-
