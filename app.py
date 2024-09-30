@@ -93,24 +93,28 @@ if st.button("Process Image and Search"):
         # Perform search if query is provided
         if search_query:
             search_result = ""
-            extracted_text_normalized = extracted_text.lower().strip()
-            search_query_normalized = search_query.lower().strip()
+            # Normalize the extracted text and search query
+            extracted_text_normalized = extracted_text.strip()
+            search_query_normalized = search_query.strip()
 
+            # Perform the exact search
             if search_type == "Exact":
                 if search_query_normalized in extracted_text_normalized:
-                    search_result = f"Exact match found: {search_query}"
+                    search_result = f"Exact match found: {search_query_normalized}"
                 else:
                     search_result = "No exact match found."
                     
+            # Perform fuzzy search
             elif search_type == "Fuzzy":
                 if fuzzy_search(search_query_normalized, extracted_text_normalized):
-                    search_result = f"Fuzzy match found: {search_query}"
+                    search_result = f"Fuzzy match found: {search_query_normalized}"
                 else:
                     search_result = "No fuzzy match found."
                     
+            # Perform boolean search
             elif search_type == "Boolean":
                 if boolean_search(search_query_normalized, extracted_text_normalized):
-                    search_result = f"Boolean search match found: {search_query}"
+                    search_result = f"Boolean search match found: {search_query_normalized}"
                 else:
                     search_result = "No Boolean match found."
             
@@ -118,3 +122,4 @@ if st.button("Process Image and Search"):
             st.write(search_result)
     else:
         st.warning("Please upload an image file to process.")
+
