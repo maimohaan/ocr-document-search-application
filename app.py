@@ -1,7 +1,7 @@
 import sys
 import os
 import streamlit as st
-from ocr.model import process_image  # Importing the OCR function
+from ocr.model import process_image  # Importing the new OCR function
 from search.search import fuzzy_search, boolean_search  # Import your search functions
 
 # Add custom CSS for styling
