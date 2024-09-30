@@ -64,6 +64,7 @@ Running the Application Locally
     2. Go to Streamlit Cloud and sign in with your GitHub account.
     3. Create a new app, link it to your GitHub repository, and select the branch (usually main or master).
     4. Streamlit will deploy your application and provide you with a public URL where users can access it.
+    5. In Advanced settings, *CLICK ON Python 3.8* make sure. It will run on *Python 3.8 ONLY*
 
 Example Usage
 Uploaded Image:
