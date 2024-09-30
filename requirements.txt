@@ -1,7 +1,7 @@
 # Core Libraries
 streamlit==1.38.0
 gradio==4.44.0
-numpy==1.23.5
+numpy>=1.26.0  # Updated to satisfy opencv-python dependencies
 pandas==1.5.3
 opencv-python==4.10.0.84
 pytesseract==0.3.13
@@ -55,7 +55,6 @@ kiwisolver==1.4.7
 layoutparser==0.3.4
 markdown-it-py==2.2.0
 MarkupSafe==2.1.5
-numpy==1.23.5
 orjson==3.10.7
 packaging==24.1
 pycryptodome==3.20.0
@@ -65,3 +64,4 @@ rich==13.8.1
 tornado==6.4.1
 watchdog==4.0.2
 zipp==3.20.2
+
