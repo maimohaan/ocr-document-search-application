@@ -1,6 +1,9 @@
 import sys
 import os
 import streamlit as st
+import pytesseract
+from PIL import Image
+import io
 
 # Add the parent directory to the Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/..")
@@ -60,6 +63,25 @@ search_query = st.text_input("Search within extracted text")
 # Search type options
 search_type = st.radio("Select Search Type", options=["Exact", "Fuzzy", "Boolean"], index=0)
 
+def process_image(uploaded_file):
+    """
+    Process the uploaded image file and extract text using Pytesseract OCR.
+    Args:
+        uploaded_file (file-like object): The uploaded image file.
+    Returns:
+        str: Extracted text or error message if the processing fails.
+    """
+    try:
+        # Convert the uploaded file to a PIL image
+        img = Image.open(io.BytesIO(uploaded_file.read()))
+        
+        # Perform OCR using Pytesseract for both Hindi and English
+        extracted_text = pytesseract.image_to_string(img, lang='hin+eng')
+        
+        return extracted_text
+    except Exception as e:
+        return f"Error in OCR processing: {str(e)}"
+
 if st.button("Process Image and Search"):
     if uploaded_file is not None:
         # Perform OCR on the uploaded image
@@ -71,20 +93,23 @@ if st.button("Process Image and Search"):
         # Perform search if query is provided
         if search_query:
             search_result = ""
+            extracted_text_normalized = extracted_text.lower().strip()
+            search_query_normalized = search_query.lower().strip()
+
             if search_type == "Exact":
-                if search_query.lower() in extracted_text.lower():
+                if search_query_normalized in extracted_text_normalized:
                     search_result = f"Exact match found: {search_query}"
                 else:
                     search_result = "No exact match found."
                     
             elif search_type == "Fuzzy":
-                if fuzzy_search(search_query, extracted_text):
+                if fuzzy_search(search_query_normalized, extracted_text_normalized):
                     search_result = f"Fuzzy match found: {search_query}"
                 else:
                     search_result = "No fuzzy match found."
                     
             elif search_type == "Boolean":
-                if boolean_search(search_query, extracted_text):
+                if boolean_search(search_query_normalized, extracted_text_normalized):
                     search_result = f"Boolean search match found: {search_query}"
                 else:
                     search_result = "No Boolean match found."
