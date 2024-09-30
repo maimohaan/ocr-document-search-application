@@ -1,30 +1,33 @@
 from fuzzywuzzy import fuzz
 
-# Fuzzy search allows for minor spelling errors or variations
 def fuzzy_search(query, text):
     """
-    Perform a fuzzy search to check how closely the query matches the text.
-
+    Perform a fuzzy search for the query in the extracted text.
     Args:
-        query (str): The search query provided by the user.
-        text (str): The extracted text from the image to search within.
-
+        query (str): The search query.
+        text (str): The extracted text.
     Returns:
-        bool: True if the fuzzy ratio is greater than 80%, else False.
+        bool: True if a fuzzy match is found, False otherwise.
     """
-    return fuzz.ratio(query.lower(), text.lower()) > 80  # Case-insensitive comparison
+    # Tokenize the text into words
+    text_words = text.split()
+    for word in text_words:
+        # Calculate the fuzz ratio for each word
+        if fuzz.partial_ratio(query, word) >= 80:  # Adjust threshold as needed
+            return True
+    return False
 
-# Boolean search with "AND" operator
 def boolean_search(query, text):
     """
-    Perform a Boolean search for multiple terms connected by 'AND'.
-
+    Perform a Boolean search for the query in the extracted text.
     Args:
-        query (str): The search query provided by the user, terms connected by 'AND'.
-        text (str): The extracted text from the image to search within.
-
+        query (str): The search query.
+        text (str): The extracted text.
     Returns:
-        bool: True if all terms are found in the text, else False.
+        bool: True if a match is found, False otherwise.
     """
-    terms = query.split(" AND ")
-    return all(term.lower() in text.lower() for term in terms)  # Case-insensitive comparison
+    # Split the query into terms
+    query_terms = query.split()
+    # Check if all terms are present in the text
+    return all(term.lower() in text.lower() for term in query_terms)
+
