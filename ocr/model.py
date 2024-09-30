@@ -1,20 +1,20 @@
 import os
 import io
 from PIL import Image
-import torch
-from transformers import AutoTokenizer, AutoModelForTokenClassification
 import pytesseract
+import torch
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-# Load the tokenizer and model for a publicly available OCR model
-tokenizer = AutoTokenizer.from_pretrained("microsoft/beit-base-patch16-224")
-model = AutoModelForTokenClassification.from_pretrained("microsoft/beit-base-patch16-224")
+# Use a suitable OCR model, such as microsoft/trocr-base-handwritten
+tokenizer = AutoTokenizer.from_pretrained("microsoft/trocr-base-handwritten")
+model = AutoModelForSeq2SeqLM.from_pretrained("microsoft/trocr-base-handwritten")
 
 # Set Tesseract path for OCR
 os.environ["TESSDATA_PREFIX"] = "/usr/share/tesseract-ocr/4.00/tessdata/"
 
 def process_image(uploaded_file):
     """
-    Process the uploaded image file and extract text using the model.
+    Process the uploaded image file and extract text using the OCR model.
     Args:
         uploaded_file (file-like object): The uploaded image file.
     Returns:
@@ -23,22 +23,19 @@ def process_image(uploaded_file):
     try:
         img = Image.open(io.BytesIO(uploaded_file.read()))
 
-        # Use Pytesseract to extract text from the image first
+        # Use Pytesseract to extract the initial text from the image
         extracted_text = pytesseract.image_to_string(img, lang='hin+eng')
 
-        # Process the extracted text using the model
-        inputs = tokenizer(extracted_text, return_tensors="pt", padding=True, truncation=True)
+        # Tokenize the extracted text
+        inputs = tokenizer(extracted_text, return_tensors="pt")
 
-        with torch.no_grad():
-            outputs = model(**inputs)
+        # Generate predictions with the model
+        outputs = model.generate(inputs["input_ids"])
 
-        # Extract logits and convert them to text (adjust based on your model's requirements)
-        extracted_logits = outputs.logits.argmax(dim=-1)
-        extracted_labels = [model.config.id2label[label.item()] for label in extracted_logits[0]]
+        # Decode the model's predictions
+        decoded_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-        # Combine the labels into a single string (you can modify this as needed)
-        final_extracted_text = ' '.join(extracted_labels)
-
-        return final_extracted_text
+        return decoded_text
     except Exception as e:
         return f"Error in OCR processing: {str(e)}"
+
