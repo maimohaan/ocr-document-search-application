@@ -5,8 +5,8 @@ import torch
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 
 # Load the tokenizer and model for the GOT OCR model
-tokenizer = AutoTokenizer.from_pretrained("Your-GOT-Model-Name")  # Replace with the actual model name
-model = AutoModelForTokenClassification.from_pretrained("Your-GOT-Model-Name")  # Replace with the actual model name
+tokenizer = AutoTokenizer.from_pretrained("your-got-model-name")  # Replace with the actual model name
+model = AutoModelForTokenClassification.from_pretrained("your-got-model-name")  # Replace with the actual model name
 
 # Set Tesseract path for OCR
 os.environ["TESSDATA_PREFIX"] = "/usr/share/tesseract-ocr/4.00/tessdata/"
