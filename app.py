@@ -1,7 +1,7 @@
 import sys
 import os
 import streamlit as st
-from ocr.model import process_image  # Importing the OCR function
+from ocr.model import process_image  # Importing the new OCR function
 from search.search import fuzzy_search, boolean_search  # Import your search functions
 
 # Add custom CSS for styling
@@ -12,6 +12,28 @@ st.markdown(
         background-color: #f0f8ff;  /* Light background color */
         color: #333;  /* Text color */
         font-family: 'Arial', sans-serif;  /* Font style */
+    }
+    .header {
+        text-align: center;
+        padding: 20px;
+        color: #2c3e50;  /* Header color */
+    }
+    .button {
+        background-color: #3498db;  /* Button color */
+        color: white;  /* Button text color */
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #2980b9;  /* Button hover color */
+    }
+    .stTextArea {
+        background-color: #ffffff;  /* Text area background */
+        border: 1px solid #ccc;  /* Border color */
+        border-radius: 5px;
     }
     </style>
     """,
