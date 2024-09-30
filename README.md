@@ -5,7 +5,7 @@ This web application enables users to upload images containing printed or handwr
 
 ## Features
 - **OCR for Text Extraction**: Upload images in .jpg, .png, or .jpeg format to extract text using OCR powered by Tesseract.
-- **Handwritten Text Recognition**: Recognize and extract handwritten text from images.
+- **Multi-Language Support**: Recognizes and extracts text in both Hindi and English.
 - **Search Functionality**: Exact match, fuzzy search, and Boolean search capabilities for analyzing the extracted text.
 
 ## Prerequisites
@@ -28,6 +28,7 @@ This web application enables users to upload images containing printed or handwr
    transformers==4.45.1
    fuzzywuzzy==0.18.0
    python-Levenshtein==0.25.1
+
    
    Then run:
    ```bash
@@ -37,10 +38,18 @@ This web application enables users to upload images containing printed or handwr
    For Windows: https://github.com/UB-Mannheim/tesseract/wiki
    For Linux/Mac, use a package manager like apt or brew.
 
-4. Configure Tesseract Path (for Windows users): Update the path to the Tesseract executable in model.py:
-   ```python
-   pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-
+4.You should keep only the code that sets the Tesseract path based on the environment variable, which is more suitable for deployment in 
+  a cloud environment like Streamlit Cloud. Here’s how to handle it:
+  1. Keep the following line in your model.py:
+      ```python
+      os.environ["TESSDATA_PREFIX"] = "/usr/share/tesseract-ocr/4.00/tessdata/"
+      This is appropriate for the deployment environment.
+  2. Remove any hardcoded paths specific to your local environment (like the Windows path):
+     # Remove this line
+     # pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+     In your README, you can note that the application is configured to automatically detect Tesseract's installation based on the 
+     environment variable, making it easier for deployment in different environments.
+    
 Running the Application Locally
    Run the Streamlit app:
    ```bash
@@ -105,6 +114,11 @@ When you upload an image and extract the text, you will get an output similar to
 
    ## License
    This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+   
+   ### Notes
+   - Adjust any sections as necessary based on your specific project structure or additional features.
+   - Make sure to test the instructions and paths provided to ensure they work for users who will set up the application.
+
 
 
  
