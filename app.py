@@ -1,13 +1,36 @@
-import sys
-import os
-import streamlit as st
-from ocr.model import process_image  # Importing the OCR function
-from search.search import fuzzy_search, boolean_search  # Import search functions
+import gradio as gr
+from ocr.model import GOTModel
+from search.search import search_keywords
 
-# Add custom CSS for styling
-st.markdown(
-    """
-    <style>
+# Load the GOT OCR model
+got_model = GOTModel()
+
+def ocr_and_search(image, keywords):
+    """Performs OCR on the uploaded image and searches for keywords."""
+    extracted_text = got_model.extract_text(image)
+
+    # Search for keywords (if provided)
+    if keywords:
+        search_results = search_keywords(extracted_text, keywords)
+    else:
+        search_results = None
+
+    return extracted_text, search_results
+
+# Create the Gradio interface
+demo = gr.Interface(
+    fn=ocr_and_search,
+    inputs=[
+        gr.Image(label="Upload Image", type="pil", image_mode="RGB"), 
+        gr.Textbox(label="Keywords (optional)", lines=1)
+    ],
+    outputs=[
+        gr.Textbox(label="Extracted Text", lines=10),
+        gr.Textbox(label="Search Results (if any)", lines=10)
+    ],
+    title="Hindi-English OCR with Search",
+    description="Upload an image containing text (Hindi and English) and search for keywords.",
+    css="""
     body {
         background-color: #f0f8ff;  /* Light background color */
         color: #333;  /* Text color */
@@ -35,60 +58,9 @@ st.markdown(
         border: 1px solid #ccc;  /* Border color */
         border-radius: 5px;
     }
-    </style>
-    """,
-    unsafe_allow_html=True
+    """
 )
 
-# Streamlit interface
-st.title("OCR and Document Search Application")
-
-# Upload an image for OCR processing
-uploaded_file = st.file_uploader("Upload an image...", type=["png", "jpg", "jpeg"])
-
-# Input for search query
-search_query = st.text_input("Search within extracted text")
-
-# Search type options
-search_type = st.radio("Select Search Type", options=["Exact", "Fuzzy", "Boolean"], index=0)
-
-if st.button("Process Image and Search"):
-    if uploaded_file is not None:
-        # Perform OCR on the uploaded image
-        extracted_text = process_image(uploaded_file)
-
-        if isinstance(extracted_text, str):
-            # Display the extracted text
-            st.text_area("Extracted Text", value=extracted_text, height=300)
-
-            # Perform search if query is provided
-            if search_query:
-                search_result = ""
-                extracted_text_normalized = extracted_text.lower().strip()
-                search_query_normalized = search_query.lower().strip()
-
-                if search_type == "Exact":
-                    if search_query_normalized in extracted_text_normalized:
-                        search_result = f"Exact match found: {search_query}"
-                    else:
-                        search_result = "No exact match found."
-                
-                elif search_type == "Fuzzy":
-                    if fuzzy_search(search_query_normalized, extracted_text_normalized):
-                        search_result = f"Fuzzy match found: {search_query}"
-                    else:
-                        search_result = "No fuzzy match found."
-                
-                elif search_type == "Boolean":
-                    if boolean_search(search_query_normalized, extracted_text_normalized):
-                        search_result = f"Boolean search match found: {search_query}"
-                    else:
-                        search_result = "No Boolean match found."
-                
-                # Display the search result
-                st.write(search_result)
-        else:
-            st.warning(f"Error in OCR processing: {extracted_text}")
-    else:
-        st.warning("Please upload an image file to process.")
+# Launch the Gradio app
+demo.launch()
 
