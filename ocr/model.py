@@ -4,17 +4,16 @@ from PIL import Image
 import torch
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 
-# Load the tokenizer and model for the selected OCR model
-model_name = "gpt2"  # Replace with the actual model name
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForTokenClassification.from_pretrained(model_name)
+# Load the tokenizer and model for the General OCR Theory (GOT) model
+tokenizer = AutoTokenizer.from_pretrained("GOT")  # Replace with the actual model name if different
+model = AutoModelForTokenClassification.from_pretrained("GOT")  # Replace with the actual model name if different
 
 # Set Tesseract path for OCR
 os.environ["TESSDATA_PREFIX"] = "/usr/share/tesseract-ocr/4.00/tessdata/"
 
 def process_image(uploaded_file):
     """
-    Process the uploaded image file and extract text using the selected OCR model.
+    Process the uploaded image file and extract text using the GOT OCR model.
     Args:
         uploaded_file (file-like object): The uploaded image file.
     Returns:
@@ -23,13 +22,22 @@ def process_image(uploaded_file):
     try:
         img = Image.open(io.BytesIO(uploaded_file.read()))
         
-        # Here, we will use the selected model to extract text
-        inputs = tokenizer(img, return_tensors="pt")
-        outputs = model(**inputs)
-        extracted_text = outputs.logits.argmax(-1).numpy()
+        # Use Pytesseract to extract text from the image first
+        extracted_text = pytesseract.image_to_string(img, lang='hin+eng')
+        
+        # Process the extracted text using the GOT model
+        inputs = tokenizer(extracted_text, return_tensors="pt", padding=True, truncation=True)
+        
+        with torch.no_grad():
+            outputs = model(**inputs)
+        
+        # Extract logits and convert them to text (adjust based on your model's requirements)
+        extracted_logits = outputs.logits.argmax(dim=-1)
+        extracted_labels = [model.config.id2label[label.item()] for label in extracted_logits[0]]
 
-        # Convert extracted text to a human-readable format
-        return extracted_text
+        # Combine the labels into a single string (you can modify this as needed)
+        final_extracted_text = ' '.join(extracted_labels)
+        
+        return final_extracted_text
     except Exception as e:
         return f"Error in OCR processing: {str(e)}"
-
