@@ -5,11 +5,11 @@ This web application enables users to upload images containing printed or handwr
 
 ## Features
 - **OCR for Text Extraction**: Upload images in .jpg, .png, or .jpeg format to extract text using OCR powered by Tesseract.
-- **Multi-Language Support**: Recognizes and extracts text in both Hindi and English.
+- **Handwritten Text Recognition**: Recognize and extract handwritten text from images.
 - **Search Functionality**: Exact match, fuzzy search, and Boolean search capabilities for analyzing the extracted text.
 
 ## Prerequisites
-- Python 3.8.10 installed.
+- Python 3.8 installed.
 - Virtual environment.
 - Libraries like Streamlit, Pytesseract, Pillow, Transformers, and others as listed in `requirements.txt`.
 
@@ -21,44 +21,45 @@ This web application enables users to upload images containing printed or handwr
    source venv/bin/activate  # On Linux/Mac
    venv\Scripts\activate  # On Windows
 
+
 2. **Install the required dependencies**:Ensure you have a requirements.txt file with the following content
 
-    # Core Libraries
-      streamlit==1.38.0
-      gradio==4.44.0
-      numpy==1.24.0  # Updated for compatibility
-      pandas==1.5.3
-      opencv-python==4.10.0.84
-      pytesseract==0.3.13
+# Core Libraries
+streamlit==1.38.0
+gradio==4.44.0
+numpy==1.24.0  # Updated for compatibility
+pandas==1.5.3
+opencv-python==4.10.0.84
+pytesseract==0.3.13
 
-    # Machine Learning 
-      torch==2.4.1
-      torchvision==0.19.1
-      torchaudio==2.4.1
-      transformers==4.45.1
-      scipy==1.9.3  # Updated
+# Machine Learning 
+torch==2.4.1
+torchvision==0.19.1
+torchaudio==2.4.1
+transformers==4.45.1
+scipy==1.9.3  # Updated
 
-    # Data Visualization
-      altair==5.4.1
-      matplotlib==3.7.5
-      pydeck==0.9.1
+# Data Visualization
+altair==5.4.1
+matplotlib==3.7.5
+pydeck==0.9.1
 
-    # OCR and PDF Libraries
-      pdfminer.six==20231228
-      pdfplumber==0.11.4
-      pdf2image==1.17.0
+# OCR and PDF Libraries
+pdfminer.six==20231228
+pdfplumber==0.11.4
+pdf2image==1.17.0
 
-    # Web and API Libraries
-      fastapi==0.115.0
-      httpx==0.27.2
-      uvicorn==0.31.0
+# Web and API Libraries
+fastapi==0.115.0
+httpx==0.27.2
+uvicorn==0.31.0
 
-    # Utility Libraries
-      fuzzywuzzy==0.18.0
-      python-Levenshtein==0.25.1
-      python-multipart==0.0.12
-      pydantic==2.9.2
-      pydantic_core==2.23.4
+# Utility Libraries
+fuzzywuzzy==0.18.0
+python-Levenshtein==0.25.1
+python-multipart==0.0.12
+pydantic==2.9.2
+pydantic_core==2.23.4
 
 # Additional Libraries
 attrs==24.2.0
@@ -159,12 +160,7 @@ When you upload an image and extract the text, you will get an output similar to
 }
 
 5. Dependencies
-   Streamlit==1.38.0
-   Pytesseract==0.3.13
-   Pillow==10.4.0
-   Transformers==4.45.1
-   Fuzzywuzzy==0.18.0
-   Python-Levenshtein==0.25.1
+   List of dependencies as mentioned in requirements.txt.
 
 6. Acknowledgments
    Streamlit for the web application framework.
