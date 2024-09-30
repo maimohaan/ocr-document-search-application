@@ -63,7 +63,3 @@ rich==13.8.1
 tornado==6.4.1
 watchdog==4.0.2
 zipp==3.20.2
-
-# Install Tesseract
-!./setup.sh
-
