@@ -63,3 +63,6 @@ rich==13.8.1
 tornado==6.4.1
 watchdog==4.0.2
 zipp==3.20.2
+
+# Add this line at the end to ensure the custom setup script runs
+-e .
